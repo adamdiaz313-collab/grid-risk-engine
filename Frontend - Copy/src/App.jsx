@@ -173,7 +173,7 @@ export default function App() {
 
         <div className="status">
           <span className="status-dot" />
-          Backend: localhost:8000
+          Backend: Render API
         </div>
       </nav>
 
