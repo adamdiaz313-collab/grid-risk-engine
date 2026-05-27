@@ -6,6 +6,7 @@ import requests
 import pandas as pd
 import joblib
 import re
+import os
 
 # ============================================
 # GRID RISK ENGINE BACKEND
@@ -32,9 +33,34 @@ app.add_middleware(
 # LOAD TRAINED MODEL
 # ============================================
 
-MODEL_PATH = "outage_model.pkl"
+MODEL_PATH = os.getenv("MODEL_PATH", "outage_model.pkl")
+MODEL_URL = os.getenv("MODEL_URL")
+
+
+def download_model_if_needed():
+    if os.path.exists(MODEL_PATH):
+        print("Model file already exists.")
+        return
+
+    if not MODEL_URL:
+        print("No MODEL_URL provided. Running without trained model.")
+        return
+
+    print("Downloading trained model...")
+
+    with requests.get(MODEL_URL, stream=True, timeout=300) as response:
+        response.raise_for_status()
+
+        with open(MODEL_PATH, "wb") as file:
+            for chunk in response.iter_content(chunk_size=1024 * 1024):
+                if chunk:
+                    file.write(chunk)
+
+    print("Model downloaded successfully.")
+
 
 try:
+    download_model_if_needed()
     model_bundle = joblib.load(MODEL_PATH)
 
     if isinstance(model_bundle, dict):
