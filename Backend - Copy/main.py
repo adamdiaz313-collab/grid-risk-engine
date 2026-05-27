@@ -58,26 +58,24 @@ def download_model_if_needed():
 
     print("Model downloaded successfully.")
 
-
 try:
     download_model_if_needed()
     model_bundle = joblib.load(MODEL_PATH)
 
-if isinstance(model_bundle, dict):
-    model = model_bundle["model"]
-    model_features = model_bundle["features"]
-else:
-    model = model_bundle
-    model_features = list(getattr(model, "feature_names_in_", [])) or None
+    if isinstance(model_bundle, dict):
+        model = model_bundle["model"]
+        model_features = model_bundle["features"]
+    else:
+        model = model_bundle
+        model_features = list(getattr(model, "feature_names_in_", [])) or None
 
-print("Model loaded successfully.")
-print("Model feature count:", len(model_features) if model_features else None)
+    print("Model loaded successfully.")
+    print("Model feature count:", len(model_features) if model_features else None)
 
 except Exception as e:
     print("Model failed to load:", e)
     model = None
     model_features = None
-
 
 # ============================================
 # REQUEST FORMAT
