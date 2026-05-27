@@ -359,6 +359,10 @@ h1 {
   background: #020617;
 }
 
+.needle,
+.needle-dot {
+  display: none;
+}
 .gauge-text {
   position: absolute;
   left: 0;
